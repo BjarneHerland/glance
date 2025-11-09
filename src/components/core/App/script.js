@@ -137,7 +137,7 @@ export default {
       showLanding: 'showLanding',
       toggleLanding() {
         if (this.landingVisible) {
-          this.showApp();
+          this.showApp(); // BGH shows app on whole screen
         } else {
           this.showLanding();
         }

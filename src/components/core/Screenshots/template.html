@@ -13,20 +13,6 @@
       <v-icon>mdi-arrow-right</v-icon>
     </v-btn>
   </v-toolbar>
-  <div
-    v-show="!atLeastOneScreenshot"
-    :class="$style.emptyState"
-  >
-    <v-icon large>mdi-image-multiple</v-icon>
-    <span class="subtitle-1 grey--text text--darken-1">No screenshots yet!</span>
-    <v-btn
-      class="mt-4"
-      :disabled="!activeView"
-      v-on:click="takeScreenshot"
-    >
-      Capture Active View
-    </v-btn>
-  </div>
   <v-list
     v-show="atLeastOneScreenshot"
   >
