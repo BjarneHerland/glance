@@ -10,6 +10,7 @@ export default {
     return {
       samples,
       version: window.GLANCE_VERSION || 'no version available',
+      serverOrigin: window.location.origin,
     };
   },
   methods: {
@@ -17,7 +18,10 @@ export default {
       const urls = [];
       const names = [];
       for (let i = 0; i < sample.datasets.length; ++i) {
-        urls.push(sample.datasets[i].url);
+        const datasetUrl = sample.datasets[i].url.startsWith('http')
+          ? sample.datasets[i].url
+          : `${this.serverOrigin}${sample.datasets[i].url}`;
+        urls.push(datasetUrl);
         names.push(sample.datasets[i].name);
       }
       this.$emit('open-urls', sample.label, urls, names);
