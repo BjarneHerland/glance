@@ -9,7 +9,6 @@ import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import FileLoader from 'paraview-glance/src/components/core/FileLoader';
-import samples from 'paraview-glance/src/samples';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
@@ -60,10 +59,9 @@ export default {
       globalSingleNotification: '',
       notifyPermanent: false,
       requiredModel: null,
-      // samples for landing display
-      samples,
       version: window.GLANCE_VERSION || 'no version available',
       serverOrigin: window.location.origin,
+      requiredModelInput: '',
     };
   },
   computed: {
@@ -131,32 +129,25 @@ export default {
       window.console.error(...args);
     });
 
-    // read required model query parameter and call openSample
+    // read required model query parameter and, if present, load it directly
     this.requiredModel = new URLSearchParams(window.location.search).get('model');
-//    this.openSample(this.requiredModel, this.requiredModel);
-    if (!this.requiredModel) {
-      console.error('Missing required query parameter: model');
-      window.alert('Required query parameter "model" is missing.');
-    } else {
-      // try to find sample by label or dataset name
-      const model = this.requiredModel;
-      const found = samples.find((s) => {
-        if (!s) return false;
-        if (typeof s.label === 'string' && s.label.toLowerCase() === model.toLowerCase()) {
-          return true;
+    if (this.requiredModel) {
+      const raw = decodeURIComponent(this.requiredModel);
+      let datasetUrl = raw;
+      if (!datasetUrl.match(/^(https?:|file:)/)) {
+        if (datasetUrl.startsWith('/')) {
+          datasetUrl = `${window.location.origin}${datasetUrl}`;
+        } else {
+          datasetUrl = `${window.location.origin}/${datasetUrl}`;
         }
-        if (s.datasets && s.datasets.some((d) => d.name === model)) {
-          return true;
-        }
-        return false;
-      });
-      if (found) {
-        // call openSample (will validate model again)
-        this.openSample(found, model);
-      } else {
-        console.error(`No sample found matching model="${model}"`);
-        window.alert(`No sample found matching model="${model}"`);
       }
+      const name = datasetUrl.split('/').pop().split('?')[0];
+      // use label = name for display
+      this.autoLoadRemotes(name, [datasetUrl], [name], raw);
+    }
+    // wire requiredModelInput default value to query parameter for convenience
+    if (this.requiredModel) {
+      this.requiredModelInput = decodeURIComponent(this.requiredModel);
     }
   },
   beforeDestroy() {
@@ -193,7 +184,11 @@ export default {
       this.fileUploadDialog = true;
       this.$nextTick(() => this.openFiles(Array.from(fileList)));
     },
-    autoLoadRemotes(label, urls, names) {
+    autoLoadRemotes(label, urls, names, model) {
+      // store model if provided
+      if (model) {
+        this.requiredModel = model;
+      }
       const remotes = urls.map((url, index) => ({
         name: names[index],
         url,
@@ -254,6 +249,22 @@ export default {
         names.push(sample.datasets[i].name);
       }
       this.autoLoadRemotes(sample.label, urls, names, model);
+    },
+    openUrlModel(input) {
+      if (!input) {
+        return;
+      }
+      const raw = input;
+      let datasetUrl = raw;
+      if (!datasetUrl.match(/^(https?:|file:)/)) {
+        if (datasetUrl.startsWith('/')) {
+          datasetUrl = `${window.location.origin}${datasetUrl}`;
+        } else {
+          datasetUrl = `${window.location.origin}/${datasetUrl}`;
+        }
+      }
+      const name = datasetUrl.split('/').pop().split('?')[0];
+      this.autoLoadRemotes(name, [datasetUrl], [name], raw);
     },
   },
 };
