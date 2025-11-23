@@ -32,5 +32,31 @@ export default [
         url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/202-t.glance`,
       },
     ],
+  },
+  {
+    label: 'TieFighter',
+    image: Images.CAD,
+    size: '112 KB',
+    description: 'T-Handle, Flanged Base, Solid Bar',
+    acknowledgement: 'https://www.traceparts.com/',
+    datasets: [
+      {
+        name: 'TieFighter',
+        url: `http://localhost:8080/TieFighter.glance`,
+      },
+    ],
+  },
+  {
+    label: 'Cylinder',
+    image: Images.CAD,
+    size: 'Not large',
+    description: 'Demo from Python-generator',
+    acknowledgement: 'Bjarne',
+    datasets: [
+      {
+        name: 'cylinder',
+        url: `file:/Users/bjarne/Work/OlavOlsen/ParaviewWeb-glance/T1.vtu`,
+      },
+    ],
   }
 ];

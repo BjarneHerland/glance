@@ -9,7 +9,7 @@ import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import FileLoader from 'paraview-glance/src/components/core/FileLoader';
-import Landing from 'paraview-glance/src/components/core/Landing';
+import samples from 'paraview-glance/src/samples';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
@@ -34,7 +34,6 @@ export default {
     DragAndDrop,
     ErrorBox,
     FileLoader,
-    Landing,
     LayoutView,
     Screenshots,
     StateFileGenerator,
@@ -60,6 +59,11 @@ export default {
       errors: [],
       globalSingleNotification: '',
       notifyPermanent: false,
+      requiredModel: null,
+      // samples for landing display
+      samples,
+      version: window.GLANCE_VERSION || 'no version available',
+      serverOrigin: window.location.origin,
     };
   },
   computed: {
@@ -126,6 +130,34 @@ export default {
       this.recordError(args.join(' '));
       window.console.error(...args);
     });
+
+    // read required model query parameter and call openSample
+    this.requiredModel = new URLSearchParams(window.location.search).get('model');
+//    this.openSample(this.requiredModel, this.requiredModel);
+    if (!this.requiredModel) {
+      console.error('Missing required query parameter: model');
+      window.alert('Required query parameter "model" is missing.');
+    } else {
+      // try to find sample by label or dataset name
+      const model = this.requiredModel;
+      const found = samples.find((s) => {
+        if (!s) return false;
+        if (typeof s.label === 'string' && s.label.toLowerCase() === model.toLowerCase()) {
+          return true;
+        }
+        if (s.datasets && s.datasets.some((d) => d.name === model)) {
+          return true;
+        }
+        return false;
+      });
+      if (found) {
+        // call openSample (will validate model again)
+        this.openSample(found, model);
+      } else {
+        console.error(`No sample found matching model="${model}"`);
+        window.alert(`No sample found matching model="${model}"`);
+      }
+    }
   },
   beforeDestroy() {
     window.removeEventListener('error', this.recordError);
@@ -204,6 +236,24 @@ export default {
         this.globalSingleNotification = msg;
         this.notifyPermanent = permanent;
       });
+    },
+    openSample(sample, modelParam = null) {
+      const model = modelParam || this.requiredModel || new URLSearchParams(window.location.search).get('model');
+      if (!model) {
+        console.error('Missing required query parameter: model');
+        window.alert('Cannot open sample: required query parameter "model" is missing.');
+        return;
+      }
+      const urls = [];
+      const names = [];
+      for (let i = 0; i < sample.datasets.length; ++i) {
+        const datasetUrl = (sample.datasets[i].url.startsWith('http') || sample.datasets[i].url.startsWith('file'))
+          ? sample.datasets[i].url
+          : `${window.location.origin}${sample.datasets[i].url}`;
+        urls.push(datasetUrl);
+        names.push(sample.datasets[i].name);
+      }
+      this.autoLoadRemotes(sample.label, urls, names, model);
     },
   },
 };

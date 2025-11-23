@@ -1,0 +1,4 @@
+src/components/core/Landing/index.vue
+src/components/core/Landing/script.js
+src/components/core/Landing/style.css
+src/components/core/Landing/template.html

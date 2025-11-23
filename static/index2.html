@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <title>VTK.js – enkel visning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --header-h: 48px;
+      --border: 1px solid #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: #111827;
+      background: #fff;
+    }
+    .app {
+      display: grid;
+      grid-template-rows: var(--header-h) 1fr;
+      height: 100%;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .5rem .75rem;
+      border-bottom: var(--border);
+      background: #f9fafb;
+    }
+    .left { display: flex; align-items: center; gap: .5rem; }
+    .viewer { position: relative; height: 100%; width: 100%; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="left">
+        <label for="modelSelect">Modell</label>
+        <select id="modelSelect" aria-label="Velg modell">
+          <option value="covid19.glance">covid19</option>
+          <option value="202-t.glance">202-t</option>
+          <option value="cylinder">Cylinder</option>
+          <option value="TieFighter">TieFighter</option>
+        </select>
+      </div>
+    </header>
+
+    <main class="viewer">
+      <iframe id="viewerFrame" title="Scene Explorer"></iframe>
+    </main>
+  </div>
+
+  <script>
+    const BASE = "http://localhost:9999?model=";
+    const sel = document.getElementById('modelSelect');
+    const frame = document.getElementById('viewerFrame');
+
+    const params = new URLSearchParams(location.search);
+    const incomingSuffix = params.get('model');
+
+    // If there's a ?model= param, use it — otherwise default to earth_orbit
+    if (incomingSuffix) {
+      const exists = [...sel.options].some(o => o.value === incomingSuffix);
+      if (!exists) {
+        const name = incomingSuffix.split('/').pop()?.replace('.vtkjs','') || 'custom';
+        const opt = document.createElement('option');
+        opt.value = incomingSuffix;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      }
+      sel.value = incomingSuffix;
+    } else {
+//      sel.value = "/vtk-js-datasets/data/vtkjs/earth-lowres.vtkjs"; // default startup model
+    }
+
+    function updateFrame() {
+      const suffix = sel.value;
+      frame.src = BASE + encodeURI(suffix);
+      const q = new URLSearchParams(location.search);
+      q.set('model', suffix);
+      history.replaceState(null, '', `${location.pathname}?${q.toString()}`);
+    }
+
+    sel.addEventListener('change', updateFrame);
+
+    // Initial load
+    updateFrame();
+  </script>
+</body>
+</html>
