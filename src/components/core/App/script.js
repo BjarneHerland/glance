@@ -8,7 +8,6 @@ import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
-import FileLoader from 'paraview-glance/src/components/core/FileLoader';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
@@ -32,7 +31,6 @@ export default {
     ControlsDrawer,
     DragAndDrop,
     ErrorBox,
-    FileLoader,
     LayoutView,
     Screenshots,
     StateFileGenerator,
