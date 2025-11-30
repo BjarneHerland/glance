@@ -50,7 +50,7 @@ export default {
       fileUploadDialog: false,
       autoloadDialog: false,
       autoloadLabel: '',
-      internalControlsDrawer: true,
+      internalControlsDrawer: false,
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
@@ -99,7 +99,8 @@ export default {
     },
   },
   created() {
-    this.internalControlsDrawer = !this.smallScreen;
+    // Keep controls drawer hidden on load (don't auto-show based on screen size)
+    // this.internalControlsDrawer = !this.smallScreen;
   },
   mounted() {
     this.$root.$on('open_girder_panel', () => {
