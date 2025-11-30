@@ -4,24 +4,46 @@
 >
   <template v-slot:default="{ dragHover }">
     <v-app>
-<!-- BGH the style below changes from initial to fixed when sample is selected
-   and then takes over the whole screeen?
- -->
+      <!-- Toggle controls drawer button (top-left, on right side of drawer when open) -->
+      <v-btn
+        small
+        color="primary"
+        dark
+        :style="{
+          position: 'absolute',
+          top: '12px',
+          left: controlsDrawer ? '332px' : '12px',
+          'z-index': 2000,
+          transition: 'left 0.3s ease'
+        }"
+        @click="controlsDrawer = !controlsDrawer"
+        aria-label="Toggle controls"
+      >
+        <v-icon>mdi-tune</v-icon>
+      </v-btn>
+
       <v-content
         :id="$style.appContent"
         :style="{
           position: landingVisible ? 'initial' : 'fixed',
         }"
       >
-
-      <landing
-          v-if="landingVisible"
-          key="if-landing"
-          v-on:open-urls="autoLoadRemotes"
-        />
-<!-- BGH autoLoadRemotes loads sample when clicking on image -->
-        <layout-view v-else key="if-landing" />
+        <div @click.stop>
+          <layout-view />
+        </div>
       </v-content>
+
+      <!-- Controls drawer: show ControlsDrawer inside a Vuetify navigation drawer bound to controlsDrawer -->
+      <v-navigation-drawer
+        app
+        v-model="controlsDrawer"
+        width="320"
+        disable-resize-watcher
+        :clipped="$vuetify.breakpoint.mdAndUp"
+      >
+        <controls-drawer />
+      </v-navigation-drawer>
+
       <!-- error dialog-->
       <component
         :is="dialogType"

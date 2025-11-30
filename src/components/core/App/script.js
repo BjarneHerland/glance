@@ -67,12 +67,10 @@ export default {
   computed: {
     controlsDrawer: {
       get() {
-        return this.landingVisible ? false : this.internalControlsDrawer;
+        return this.internalControlsDrawer;
       },
       set(visible) {
-        if (!this.landingVisible) {
-          this.internalControlsDrawer = visible;
-        }
+        this.internalControlsDrawer = !!visible;
       },
     },
     ...mapState({
@@ -249,9 +247,9 @@ export default {
         names.push(sample.datasets[i].name);
       }
       this.autoLoadRemotes(sample.label, urls, names, model);
-
       // TODO original code did this
-//      this.$emit('open-urls', sample.label, urls, names);
-// check if emitting thisevent triggers more behavior than calling autoLoadRemotes directly
+      // this.$emit('open-urls', sample.label, urls, names);
+    }
+
   },
 };
