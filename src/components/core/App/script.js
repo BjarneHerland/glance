@@ -249,22 +249,9 @@ export default {
         names.push(sample.datasets[i].name);
       }
       this.autoLoadRemotes(sample.label, urls, names, model);
-    },
-    openUrlModel(input) {
-      if (!input) {
-        return;
-      }
-      const raw = input;
-      let datasetUrl = raw;
-      if (!datasetUrl.match(/^(https?:|file:)/)) {
-        if (datasetUrl.startsWith('/')) {
-          datasetUrl = `${window.location.origin}${datasetUrl}`;
-        } else {
-          datasetUrl = `${window.location.origin}/${datasetUrl}`;
-        }
-      }
-      const name = datasetUrl.split('/').pop().split('?')[0];
-      this.autoLoadRemotes(name, [datasetUrl], [name], raw);
-    },
+
+      // TODO original code did this
+//      this.$emit('open-urls', sample.label, urls, names);
+// check if emitting thisevent triggers more behavior than calling autoLoadRemotes directly
   },
 };
