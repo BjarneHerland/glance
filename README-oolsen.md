@@ -33,10 +33,8 @@ how to keep a list of load-cases in a dropdown and load the "App" in an IFRAME
 loading the selection from the dropdown. It is provided as an example and POC.
 
 
-Develop and Run
+Develo and Run
 ==============
-[Nginx-server]: https://github.com/nginx/nginx
-
 Refer to instructions in the original [Glance][] repository for build-options
 and hints about how to run the application.
 
