@@ -1,7 +1,14 @@
 [Glance]: https://kitware.github.io/glance/
 [Kitware]: http://www.kitware.com
+[VTK files]: http://www.vtk.org
+[Dr. Tech. OlavOlsen]: https://www.olavolsen.no/
+[ShellDesign]: https://olavolsen.no/en/services/shelldesign
 
-This is a modified version of the [Glance][] demo from [Kitware][].
+Introduction
+==============
+This is a modified version of the [Glance] demo from [Kitware][] made for
+[Dr. Tech. OlavOlsen][] as a Proof-of-Concept for viewing results from their
+[ShellDesign] software as [VTK files][] in a browser.
 
 Modifications
 ==============
@@ -26,10 +33,15 @@ how to keep a list of load-cases in a dropdown and load the "App" in an IFRAME
 loading the selection from the dropdown. It is provided as an example and POC.
 
 
-Development
+Develop and Run
 ==============
+[Nginx-server]: https://github.com/nginx/nginx
 
-When building you need to set crypto-engine by tweaking options for node like this
+Refer to instructions in the original [Glance][] repository for build-options
+and hints about how to run the application.
+
+I have found that when building on e.g. an EC2-host you need to set crypto-engine
+by tweaking options for node like this
 
 `NODE_OPTIONS='--openssl-legacy-provider' npm run dev`
 
@@ -37,7 +49,11 @@ and
 
 `NODE_OPTIONS='--openssl-legacy-provider' npm run build:release`
 
-Refer to instructions in the original [Glance][] repository for more advanced build-options.
+For the POC I hosted the landing-page (index.html), the "App" module and a small
+selection of data behind an [Nginx-server] installed on a AWS S2-instance of
+type "t3.small" with 2 vCPUs and 2Gb RAM running Ubuntu 24.04 LTS with 30Gb disk.
 
-Running
-==============
+
+
+Bjarne Geir Herland\
+December 2025
