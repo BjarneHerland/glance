@@ -26,10 +26,13 @@ how to keep a list of load-cases in a dropdown and load the "App" in an IFRAME
 loading the selection from the dropdown. It is provided as an example and POC.
 
 
-Development
+Develo and Run
 ==============
+Refer to instructions in the original [Glance][] repository for build-options
+and hints about how to run the application.
 
-When building you need to set crypto-engine by tweaking options for node like this
+I have found that when building on e.g. an EC2-host you need to set crypto-engine
+by tweaking options for node like this
 
 `NODE_OPTIONS='--openssl-legacy-provider' npm run dev`
 
@@ -37,7 +40,4 @@ and
 
 `NODE_OPTIONS='--openssl-legacy-provider' npm run build:release`
 
-Refer to instructions in the original [Glance][] repository for more advanced build-options.
-
-Running
-==============
+In the POC I 
